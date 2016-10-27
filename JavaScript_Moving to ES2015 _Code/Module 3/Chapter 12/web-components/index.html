@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Web Components Demo</title>
+		<script src="webcomponents.js"></script>
+	</head>
+	<body>
+		<template id="cardTemplate">
+			<style type="text/css">
+				.container
+				{
+					width: 250px;
+					float: left;
+					margin-right: 10px;
+				}
+
+				img
+				{
+					width: 100%;
+				}
+			</style>
+			<div class="container">
+				<img src="" />
+				<div>
+					<h3></h3>
+					<p></p>
+				</div>
+			</div>			
+		</template>
+
+		<custom-card data-img="http://placehold.it/250x250" data-title="Title 1" data-description="Description 1" is="custom-card"></custom-card>
+		<custom-card data-img="http://placehold.it/250x250" data-title="Title 2" data-description="Description 2"></custom-card>
+
+		<script>
+			var customCardProto = Object.create(HTMLElement.prototype);
+			customCardProto.createdCallback = function(){
+				var template = document.querySelector("#cardTemplate");
+				template.content.querySelector("img").src = this.getAttribute("data-img");
+				template.content.querySelector("h3").innerHTML = this.getAttribute("data-title");
+				template.content.querySelector("p").innerHTML = this.getAttribute("data-description");
+
+				var clone = document.importNode(template.content, true);
+
+				var shadow = this.createShadowRoot();
+				
+				shadow.appendChild(clone);
+			}
+			var customCard = document.registerElement("custom-card", {
+				prototype: customCardProto
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,12 @@
+<br><br>
+
+<div *ngIf="display1">Hello</div>
+<div *ngIf="display2">Hi</div>
+
+<span [ngSwitch]="switchOption">
+  <span *ngSwitchWhen="'A'">A</span>
+  <span *ngSwitchWhen="'B'">B</span>
+  <span *ngSwitchWhen="'C'">C</span>
+  <span *ngSwitchWhen="'D'">D</span>
+  <span *ngSwitchDefault>other</span>
+</span>

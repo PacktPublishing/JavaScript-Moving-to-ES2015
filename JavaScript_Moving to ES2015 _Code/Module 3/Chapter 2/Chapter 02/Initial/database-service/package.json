@@ -1,0 +1,7 @@
+{
+	"name": "database-service",
+	"dependencies": {
+		"seneca": "0.6.5",
+		"seneca-mongo-store": "0.2.0"
+	}
+}

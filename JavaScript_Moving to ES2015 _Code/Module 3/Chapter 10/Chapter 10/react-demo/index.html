@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>React Demo</title>
+      
+        <script src="react.js"></script>
+        <script src="react-dom.js"></script>
+        <script src="browser.min.js"></script>
+    </head>
+    <body>
+        <div id="container1"></div>
+        <div id="container2"></div>
+        <div id="container3"></div>
+        <div id="container4"></div>
+        <div id="container5"></div>
+        <div id="container6"></div>
+        <div id="container7"></div>
+        <div id="container8"></div>
+        <div id="container9"></div>
+
+        <script>        
+            var helloBold = React.createElement("b", {}, "Hello");
+            var worldItalic = React.createElement("i", {}, " World");
+            var helloWorld = React.createElement("a", {href: "#"}, helloBold, worldItalic);
+
+            ReactDOM.render(helloWorld, document.getElementById("container1"));
+
+            var anchorWithBoldItalic = React.createClass({
+                render: function() {
+                    return React.createElement(
+                        "a", 
+                        {href: this.props.href}, 
+                        React.createElement("b", {}, this.props.boldText), 
+                        React.createElement("i", {}, this.props.italicText)
+                    );
+                }
+            });
+
+            var HelloWorld = React.createElement(anchorWithBoldItalic, {href: "#", boldText: "Hello", italicText: " World" });
+
+            ReactDOM.render(HelloWorld, document.getElementById("container2"));
+
+            var hideShowBoxButton = React.createClass({
+                getInitialState: function(){
+                    return {
+                        display: "inline-block"
+                    }
+                },
+                handleClick: function(){
+                    if(this.state.display == "inline-block")
+                    {
+                        this.setState({display: "none"});
+                    }
+                    else
+                    {
+                        this.setState({display: "inline-block"});
+                    }
+                },
+                render: function(){
+                    return React.createElement(
+                        "div", 
+                        {}, 
+                        React.createElement(
+                            "a", 
+                            {href: "#", onClick: this.handleClick}, 
+                            "Click to Show/Hide"
+                        ), 
+                        React.createElement(
+                            "span", 
+                            {
+                                style: {
+                                    display: this.state.display, 
+                                    height: 30, 
+                                    width: 30, 
+                                    backgroundColor: "red"
+                                }
+                            }
+                        )
+                    );
+                }
+            });
+
+            ReactDOM.render(React.createElement(hideShowBoxButton), document.getElementById("container3"));
+
+        </script>
+
+        <script type="text/babel">
+            var HideShowBoxButton = React.createClass({
+                getInitialState: function(){
+                    return {
+                        display: "inline-block"
+                    }
+                },
+                handleClick: function(){
+                    if(this.state.display == "inline-block")
+                    {
+                        this.setState({display: "none"});
+                    }
+                    else
+                    {
+                        this.setState({display: "inline-block"});
+                    }
+                },
+                render: function(){
+                    var boxStyle = {
+                        display: this.state.display, 
+                        height: 30, 
+                        width: 30, 
+                        backgroundColor: "red"
+                    };
+
+                    return (
+                        <div>
+                            <a href="#" onClick={this.handleClick}>Click to Show/Hide</a>
+                            <span style={boxStyle}></span>
+                        </div>
+                    )
+                }
+            });
+
+            ReactDOM.render(<HideShowBoxButton />, document.getElementById("container4"));
+
+            var ResponsiveImage = React.createClass({
+                render: function(){
+
+                    var imgWidth = {
+                        width: "100%"
+                    }
+
+                    return (
+                        <img src={this.props.src} style={imgWidth} />
+                    )
+                }
+            })
+
+            var Card = React.createClass({
+                render: function(){
+                    var CardContainerStyle = {
+                        maxWidth: 300,
+                        backgroundColor: "grey"
+                    }
+
+                    return (
+                        <div style={CardContainerStyle}>
+                            <h4>{this.props.heading}</h4>
+                            <ResponsiveImage src={this.props.src} />
+                        </div>
+                    )
+                }
+            })
+
+            ReactDOM.render(<Card src="http://placehold.it/350x150" heading="This is a Card Header" />, document.getElementById("container5"));
+            
+
+            var DynamicList = React.createClass({
+                getInitialState: function(){
+                    return {
+                        results: this.props.results
+                    }
+                },
+                handleClick: function(){ 
+                    var results = this.state.results;
+                    var firstId = results[0].id - 1;
+                    var firstValue = results[0].value - 1;
+
+                    results.unshift({id: firstId, value: firstValue});
+                    this.setState({results: results});
+                },
+                render: function(){
+                    return (
+                        <div>
+                            <a href="#" onClick={this.handleClick}>Click to add new item</a>
+                            <ul>
+                                {this.state.results.map(function(result) {
+                                    return <li key={result.id}> {result.value} </li>;
+                                })}
+                            </ul>
+                        </div>
+                        
+                    )
+                }
+            })
+
+            var results = [{id: 1, value: 1}, {id: 2, value: 2}];
+
+            ReactDOM.render(<DynamicList results={results} />, document.getElementById("container6"));
+
+            var ButtonComponent = React.createClass({
+                componentWillReceiveProps: function(nextProps){
+                    console.log("Text changed to " + nextProps.text);
+                },
+                render: function(){
+                    return (
+                        <button>{this.props.text}</button>
+                    )
+                }
+            })
+
+            var ButtonHolderComponent = React.createClass({
+                componentDidMount: function(){
+                    setInterval(function(){
+                        this.setState({
+                            text: this.state.text + 1
+                        });
+                    }.bind(this), 1000)
+                },
+                getInitialState: function(){
+                    return {
+                        text: 1
+                    }
+                },
+                render: function(){
+                    return (
+                        <ButtonComponent text={this.state.text} />
+                    )
+                }
+            })
+
+            ReactDOM.render(<ButtonHolderComponent />, document.getElementById("container7"));
+
+            var Mixin1 = {
+                componentWillMount: function(){
+                    console.log("Component will mount now");
+                }
+            }
+
+            var Mixin2 = {
+                componentDidMount: function(){
+                    console.log("Component did mount");
+                }
+            }
+
+            var HeadingComponent = React.createClass({
+                mixins: [Mixin1, Mixin2],
+                render: function(){
+                    return <h1>React is Awesome</h1>
+                }
+            });
+
+            ReactDOM.render(<HeadingComponent />, document.getElementById("container8"));
+
+            var FormComponent = React.createClass({
+                clicked: function(){
+                    console.log(this.refs.myInput.value);
+                },
+                render: function(){
+                    return (
+                        <div>
+                            <input type="text" placeholder="Write Something" ref="myInput" />
+                            <input type="button" value="Click to Submit" onClick={this.clicked} />
+                        </div>
+                        
+                    )
+                }
+            })
+
+            ReactDOM.render(<FormComponent />, document.getElementById("container9"));
+        </script>
+    </body>
+</html>

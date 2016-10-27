@@ -1,0 +1,9 @@
+{
+	"name": "Live-Score",
+	"dependencies": {
+		"express": "4.13.3",
+		"socket.io": "1.3.7",
+		"basic-auth": "1.0.3",
+		"socket.io-cookie": "0.0.1"
+	}
+}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Advanced Profile Search Widget</title>
+
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="section-1">
+				<h3>Provide search information</h3>
+				<hr>
+				<div class="form-style">
+				    <form action="" method="post">
+				        <label><span>First Name</span><input type="text" class="input-field" id="first-name" value="" /></label>
+				        <label><span>Last Name </span><input type="text" class="input-field" id="last-name" value="" /></label>
+				        <label>
+				        	<span>Email</span>
+				        	<input type="email" class="input-field" id="email" value="" />
+				        	<br><small class="hide" id="email-error">Email address is invalid</small>
+				        </label>
+				        <label>
+				            <span>Gender</span>
+				            <select id="gender" class="select-field">
+				                <option value="male">Male</option>
+				                <option value="female">Female</option>
+				            </select>
+				        </label>
+				        <label><span>Company</span><input list="companies" type="text" class="input-field" value="" id="company" /></label>
+				        <label><span>Address</span><input type="address" class="input-field" value="" id="address" /></label>
+				        <label><span>Skill</span><input type="text" class="input-field" value="" id="skill" /></label>
+				        <label><span>DOB</span><input placeholder="mm/dd/yyyy" type="text" class="input-field" value="" id="dob" /></label>
+				        <label><span>&nbsp;</span><input type="button" value="Search" id="search" /></label>
+
+				        <datalist id="companies"></datalist>
+				    </form>
+				</div>
+			</div>
+			<div class="section-2">
+				<h3>Search Result</h3>
+				<hr>
+				<ul id="search-result">
+				</ul>
+			</div>
+			<div class="clear"></div>
+		</div>	
+
+		<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+		<script type="text/javascript" src="js/Bacon.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+	</body>
+</html>

@@ -1,0 +1,7 @@
+{
+	"name": "SearchEngine-Template",
+	"dependencies": {
+		"express": "4.13.3",
+		"chance": "1.0.3"		
+	}
+}

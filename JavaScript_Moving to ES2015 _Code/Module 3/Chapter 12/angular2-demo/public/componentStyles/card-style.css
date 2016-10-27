@@ -1,0 +1,11 @@
+.container
+{
+	width: 250px;
+	float: left;
+	margin-right: 10px;
+}
+
+img
+{
+	width: 100%;
+}

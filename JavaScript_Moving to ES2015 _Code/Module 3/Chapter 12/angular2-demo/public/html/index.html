@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Angular 2 Demo</title>
+	</head>
+	<body>
+
+		<app></app>
+
+		<script src="/js/angular2-polyfills.js"></script>
+		<script src="/js/Rx.umd.js"></script>
+		<script src="/js/angular2-all.umd.js"></script>
+		<script>
+			var Card = ng.core.Component({
+				selector: "card",
+				inputs: ["src", "title", "desc"],
+				templateUrl: "componentTemplates/card-template.html",
+				styleUrls: ["componentStyles/card-style.css"],
+				encapsulation: ng.core.ViewEncapsulation.Native
+			})
+			.Class({
+				constructor: function(){
+				}
+			})
+
+			var CardsService = ng.core.Class({
+				constructor: function() {
+				},
+				getCards: function() {
+					return [{
+						src: "http://placehold.it/350x150",
+						title: "Title 1",
+						desc: "Description 1"
+					}, 
+					{
+						src: "http://placehold.it/350x150",
+						title: "Title 2",
+						desc: "Description 2"
+					}, 
+					{
+						src: "http://placehold.it/350x150",
+						title: "Title 3",
+						desc: "Description 3"
+					}]
+				}
+			});
+
+			var Cards = ng.core.Component({
+				selector: "cards",
+				viewProviders: [CardsService],
+				directives: [Card],
+				templateUrl: "componentTemplates/cards-template.html",
+				encapsulation: ng.core.ViewEncapsulation.Native
+			}).Class({
+				constructor: [CardsService, function(cardsService){
+					this.getCards = cardsService.getCards;
+				}],
+				ngOnInit: function(){
+					this.cards = this.getCards();
+				}
+			})
+
+			var SampleComponent1 = ng.core.Component({
+				selector: "sampleone",
+				template: "{{value}}",
+				viewProviders: [ng.core.ChangeDetectorRef],
+				changeDetection: ng.core.ChangeDetectionStrategy.Detached
+			}).Class({
+				constructor: [ng.core.ChangeDetectorRef, function(cd){
+					this.cd = cd;
+				}],
+				ngOnInit: function(){
+					this.value = 1;
+					setInterval(function(){
+						this.value++;
+						this.cd.markForCheck();
+					}.bind(this), 2000)
+				}
+			})
+
+			var ListItem = ng.core.Component({
+				selector: "item",
+				inputs: ["title"],
+				template: "<li>{{title}} | <ng-content></ng-content></li>",
+			}).Class({
+				constructor: function(){}
+			})
+
+			var List = ng.core.Component({
+				selector: "list",
+				template: "<ul><ng-content select='item'></ng-content></ul>",
+				queries: {
+					list_items: new ng.core.ContentChildren(ListItem)
+				}
+			}).Class({
+				constructor: function(){},
+				ngAfterContentInit: function(){
+					this.list_items._results.forEach(function(e){
+						console.log(e.title);
+					})
+				}
+			})
+
+			var SampleComponent2 = ng.core.Component({
+				selector: "sampletwo",
+				template: "<input type='text' #input />",
+				queries: {
+					input_element: new ng.core.ViewChild("input")
+				}
+			}).Class({
+				constructor: function(){},
+				ngAfterViewInit: function(){
+					this.input_element.nativeElement.value = "Hi";
+				}
+			})
+
+			var SampleComponent3 = ng.core.Component({
+				selector: "samplethree",
+				template: "{{info.firstname + info.lastname | uppercase}}"
+			}).Class({
+				constructor: function(){
+					this.info = {
+						firstname: "firstname",
+						lastname: " lastname"
+					}
+				}
+			})
+
+			var SampleComponent4 = ng.core.Component({
+				selector: "samplefour",
+				template: "<input (click)='clicked($event)' (mouseover)='mouseover($event)' type='button' value='Click Me!!!' />"
+			}).Class({
+				constructor: function(){
+					this.clicked = function(e){
+						alert("Hi from SampleComponent4");
+					};
+
+					this.mouseover = function(e){
+						console.log("Mouse over event");
+					}
+				}
+			})
+
+			var SampleComponent5 = ng.core.Component({
+				selector: "samplefive",
+				inputs: ["info"],
+				template: "{{info.name}}"
+			}).Class({
+				constructor: function(){}
+			})
+
+			var SampleComponent6 = ng.core.Component({
+				selector: "samplesix",
+				directives: [SampleComponent5],
+				template: "<samplefive [info]='myInfo'></samplefive>"
+			}).Class({
+				constructor: function(){
+					this.myInfo = {
+						name: "Name"
+					}
+				}
+			})
+
+			var SampleComponent7 = ng.core.Component({
+				selector: "sampleseven",
+				template: "<input [(ngModel)]='name' /><input (click)='clicked()' value='Click here' type='submit' />"
+			}).Class({
+				constructor: function(){},
+				clicked: function(){
+					alert(this.name);
+				}
+			})
+
+			var SampleComponent8 = ng.core.Component({
+				selector: "sampleeight",
+				template: "<div [ngStyle]='styles' [ngClass]='classes'></div>"
+			}).Class({
+				constructor: function(){
+					this.styles = {
+						"font-size": "20px",
+						"font-weight": "bold"	
+					}
+
+					this.classes = {
+						a: true, 
+						b: true,
+						c: false
+					};
+				}
+			})
+
+			var SampleComponent9 = ng.core.Component({
+				selector: "samplenine",
+				templateUrl: "componentTemplates/samplecomponent9-template.html"
+			}).Class({
+				constructor: function(){
+					this.display1 = true;
+					this.display2 = false;
+					this.switchOption = 'A';
+				}
+			})
+
+			var SampleComponent10 = ng.core.Component({
+				selector: "sampleten",
+				outputs: ["click"],
+				template: ""
+			}).Class({
+				constructor: function(){
+					this.click = new ng.core.EventEmitter();
+					setInterval(function(){
+						this.click.next({});
+					}.bind(this), 10000)
+				}
+			})
+
+			var SampleComponent11 = ng.core.Component({
+				selector: "sampleeleven",
+				directives: [SampleComponent10],
+				template: "<br><sampleten (click)='clicked($event)'></sampleten>{{value}}"
+			}).Class({
+				constructor: function(){
+					this.value = 1;
+					this.clicked = function(e){
+						this.value++;
+					}
+				}
+			})
+
+			var SampleComponent12 = ng.core.Component({
+				selector: "sampletwelve",
+				inputs: ["count"],
+				outputs: ["countChange"],
+				template: ""
+			}).Class({
+				constructor: function(){
+					this.countChange = new ng.core.EventEmitter();			
+					setInterval(function(){
+						this.count++;
+						this.countChange.next(this.count);
+					}.bind(this), 10000);
+				}
+			})
+
+			var SampleComponent13 = ng.core.Component({
+				selector: "samplethirteen",
+				directives: [SampleComponent12],
+				template: "<br><sampletwelve [count]='count' (countChange)= 'count=$event'></sampletwelve>{{count}}"
+			}).Class({
+				constructor: function(){
+					this.count = 1;
+				}
+			})			
+
+			var Service1 = ng.core.Class({
+				constructor: function() {
+				},
+				getValue: function() {
+					return "xyz"
+				}
+			});
+
+			var Service2 = ng.core.Class({
+				constructor: function() {
+				},
+				getValue: function() {
+					return "def"
+				}
+			});
+
+			var Service3 = ng.core.Class({
+				constructor: function() {
+				},
+				getValue: function() {
+					return "mno"
+				}
+			});
+
+			var Service4 = ng.core.Class({
+				constructor: [Service2, Service3, function(s2, s3) {
+					console.log(s2);
+					console.log(s3);
+				}],
+				getValue: function() {
+					return "abc"
+				}
+			});			
+
+			var ServiceTest1 = ng.core.Component({
+				selector: "st1",
+				viewProviders: [
+					ng.core.provide(Service1, {useClass: Service4}), 
+					ng.core.provide(Service2, {useValue: "def"}), 
+					ng.core.provide(Service3, {useFactory: function(){
+						return "mno";
+					}})
+				],
+				template: ""
+			}).Class({
+				constructor: [Service1, function(s1){
+					console.log(s1.getValue());
+				}]
+			})
+
+			var counter = 1;
+
+			var Service5 = ng.core.Class({
+				constructor: function(){}
+			})
+
+			var ServiceTest2 = ng.core.Component({
+				selector: "st2",
+				template: ""
+			}).Class({
+				constructor: [Service5, function(s5){
+					console.log(s5);
+				}]
+			})
+
+			var ServiceTest3 = ng.core.Component({
+				selector: "st3",
+				providers: [ng.core.provide(Service5, {useFactory: function(){
+					counter++;
+					return counter;
+				}})],
+				directives: [ServiceTest2],
+				template: "<st2></st2>"
+			}).Class({
+				constructor: [Service5, function(s5){
+					console.log(s5);
+				}]	
+			})
+
+			var App = ng.core.Component({
+				selector: "app",
+				directives: [Cards, SampleComponent1, List, ListItem, SampleComponent2, SampleComponent3, SampleComponent4, SampleComponent6, SampleComponent7, SampleComponent8, SampleComponent9, SampleComponent11, SampleComponent13, ServiceTest1, ServiceTest3],
+				templateUrl: "componentTemplates/app-template.html"
+			}).Class({
+				constructor: function(){}
+			})
+
+			ng.platform.browser.bootstrap(App);
+		</script>
+	</body>
+</html>

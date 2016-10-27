@@ -1,0 +1,6 @@
+{
+	"name": "Angular2-Demo",
+	"dependencies": {
+		"express": "4.13.3"
+	}
+}

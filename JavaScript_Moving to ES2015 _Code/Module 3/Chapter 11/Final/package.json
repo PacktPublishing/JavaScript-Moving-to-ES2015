@@ -1,0 +1,8 @@
+{
+  "name": "rss-reader",
+  "dependencies": {
+    "express": "4.13.3",
+    "request": "2.69.0",
+    "xml2json": "0.9.0"
+  }
+}

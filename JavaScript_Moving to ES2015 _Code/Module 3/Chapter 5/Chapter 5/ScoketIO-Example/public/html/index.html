@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SocketIO-Example</title>
+	</head>
+	<body>
+		<script src="js/socket.io-1.3.7.js"></script>
+		<script>
+var socket = io("http://localhost:3000", {path: "/websocket"});
+
+socket.on("connect", function () {
+
+	socket.send("Hi, from client");
+	
+	socket.on("message", function (msg) {
+    	console.log(msg)
+    });
+
+	socket.on("disconnect", function(){ 
+  		console.log("I am disconnected");
+  	});
+
+	socket.on("custom-event", function (parameter1, parameter2) {
+      console.log(parameter1, parameter2);
+  	});
+
+    socket.emit("custom-event", "parameter1", "parameter2");
+});
+
+var socket1 = io("http://localhost:3000/custom-namespace", {path: "/websocket"});
+
+socket1.on("connect", function () {
+	
+	socket1.send("Hi, from client");
+	
+	socket1.on("message", function (msg) {
+    	console.log(msg)
+    });
+
+	socket1.on("disconnect", function(){ 
+  		console.log("I am disconnected");
+  	});
+
+	socket1.on("custom-event", function (parameter1, parameter2) {
+      console.log(parameter1, parameter2);
+  	});
+
+    socket1.emit("custom-event", "parameter1", "parameter2");
+});	
+		</script>
+	</body>
+</html>
+

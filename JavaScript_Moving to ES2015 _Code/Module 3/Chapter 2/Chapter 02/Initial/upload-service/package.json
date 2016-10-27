@@ -1,0 +1,11 @@
+{
+	"name": "upload-service",
+	"dependencies": {
+		"seneca": "0.6.5",
+		"express": "4.13.3",
+		"connect-multiparty": "2.0.0",
+		"path": "0.12.7",
+		"request": "2.64.0",
+		"fs": "latest"
+	}
+}

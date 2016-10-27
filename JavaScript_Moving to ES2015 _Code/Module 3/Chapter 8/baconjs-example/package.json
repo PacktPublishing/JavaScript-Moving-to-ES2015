@@ -1,0 +1,7 @@
+{
+	"name": "Baconjs-Example",
+	"dependencies": {
+		"express": "4.13.3",
+		"baconjs": "0.7.83"
+	}
+}

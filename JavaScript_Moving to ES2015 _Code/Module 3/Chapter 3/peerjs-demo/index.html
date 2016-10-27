@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+	<head>
+		<title>PeerJS Demo</title>
+	</head>
+	<body>
+		
+
+		<video id="remoteVideo"></video>
+		<br>
+		<button onclick="connect()">Connect</button>
+		<br>
+		<input type="text" id="message">
+		<button onclick="send_message()">Send Message</button>
+
+		<script src="peer.min.js"></script>
+		<script>
+
+			var peer = null;
+
+			window.addEventListener("load", function(){
+				var id = prompt("Please enter an unique name");
+				
+				peer = new Peer(id, {key: "io3esxy6y43zyqfr"}); 
+
+				peer.on("open", function(id){
+					alert("Connected to PeerServer successfully with ID: " + id);
+				});
+
+				peer.on("error", function(err){
+					alert("An error occured. Error type: " + err.type);
+				})
+
+				peer.on("disconnected", function(){
+					alert("Disconnected from signaling server. You ID is taken away. Peer-to-peer connections is still intact");
+				})
+
+				peer.on("close", function(){
+					alert("Connection to signaling server and peer-to-peer connections have been killed. You ID is taken away. You have been destroyed");
+				})
+
+				peer.on("connection", function(dataConnection){
+					setTimeout(function(){
+						if(confirm(dataConnection.peer + " wants to send data to you. Do you want to accept?"))
+						{	
+							acceptDataConnection(dataConnection);
+						}
+						else
+						{
+							dataConnection.close();
+						}
+					}, 100)
+				})
+
+				peer.on("call", function(mediaConnection){
+					setTimeout(function(){
+						if(confirm("Got a call from " + mediaConnection.peer + ". Do you want to pick the call?"))
+						{	
+							acceptMediaConnection(mediaConnection);
+						}
+						else
+						{
+							mediaConnection.close();
+						}
+					}, 100);
+				})
+			});
+
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+			var myDataConnection = null;
+			var myMediaConnection = null;
+
+			function acceptDataConnection(dataConnection)
+			{	
+				myDataConnection = dataConnection;
+
+				dataConnection.on("data", function(data){
+					alert("Message from " + dataConnection.peer + ".\n" + data)
+				})
+
+				dataConnection.on("close", function(data){
+					alert("DataConnecion closed");
+				})
+
+				dataConnection.on("error", function(err){
+					alert("Error occured on DataConnection. Error: " + err);
+				})
+			}
+
+			function acceptMediaConnection(mediaConnection)
+			{
+				myMediaConnection = mediaConnection;
+
+				mediaConnection.on("stream", function(remoteStream){
+
+					document.getElementById("remoteVideo").setAttribute("src", URL.createObjectURL(remoteStream));
+					document.getElementById("remoteVideo").play();
+				})
+
+				mediaConnection.on("close", function(data){
+					alert("MediaConnecion closed");
+				})
+
+				mediaConnection.on("error", function(err){
+					alert("Error occured on MediaConnection. Error: " + err);
+				})
+
+				navigator.getUserMedia({video: true, audio: true}, function(mediaStream) {
+					mediaConnection.answer(mediaStream);
+				}, function(e){ alert("Error with MediaStream: " + e); });
+			}
+
+			function connect()
+			{
+				var id = prompt("Please enter other peer ID");
+				establishDataConnection(id);
+				establishMediaConnection(id);
+			}
+
+			function establishDataConnection(id)
+			{
+				var dataConnection = peer.connect(id, {reliable: true, ordered: true});
+
+				myDataConnection = dataConnection;
+
+				dataConnection.on("open", function(){
+					alert("DataConnecion Established");
+				});
+
+				dataConnection.on("data", function(data){
+					alert("Message from " + dataConnection.peer + ".\n" + data)
+				})
+
+				dataConnection.on("close", function(data){
+					alert("DataConnecion closed");
+				})
+
+				dataConnection.on("error", function(err){
+					alert("Error occured on DataConnection. Error: " + err);
+				})
+			}
+
+			function establishMediaConnection(id)
+			{
+				var mediaConnection = null;
+
+				navigator.getUserMedia({video: true, audio: true}, function(mediaStream) {
+					mediaConnection = peer.call(id, mediaStream);
+
+					myMediaConnection = mediaConnection;
+
+					mediaConnection.on("stream", function(remoteStream){
+						document.getElementById("remoteVideo").setAttribute("src", URL.createObjectURL(remoteStream));
+						document.getElementById("remoteVideo").play();
+					})
+
+					mediaConnection.on("error", function(err){
+						alert("Error occured on MediaConnection. Error: " + err);
+					})
+
+					mediaConnection.on("close", function(data){
+						alert("MediaConnecion closed");
+					})
+				}, function(e){ alert("Error with MediaStream: " + e); });
+			}
+
+			function send_message()
+			{
+				var text = document.getElementById("message").value;
+
+				myDataConnection.send(text);
+			}
+		</script>
+	</body>
+</html>

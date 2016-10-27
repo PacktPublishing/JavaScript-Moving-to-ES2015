@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+	<body>
+
+		<video id="myVideo"></video>
+		<br>
+		<input value="Pause" onclick="pause()" type="button" />
+
+		<script type="text/javascript">
+
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+			var constraints = {
+				audio: true, 
+				video: true
+			}
+
+			var av_stream = null;
+
+			navigator.getUserMedia(constraints, function(mediastream){
+
+				av_stream = mediastream;
+
+				document.getElementById("myVideo").setAttribute("src", URL.createObjectURL(mediastream));
+				document.getElementById("myVideo").play();
+			}, function(err){
+				console.log("Failed to get MediaStream", err);
+			});
+
+			function pause()
+			{
+				av_stream.getTracks()[0].enabled = !av_stream.getTracks()[0].enabled;
+				av_stream.getTracks()[1].enabled = !av_stream.getTracks()[1].enabled;
+			}
+
+		</script>
+	</body>
+</html>

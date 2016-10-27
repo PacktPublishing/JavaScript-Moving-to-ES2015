@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+	<head>
+		<title>MediaStreamTrack.getSources Example</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			MediaStreamTrack.getSources(function(sources){
+				for(var count = 0; count < sources.length; count++)
+				{
+					console.log("Source " + (count + 1) + " info:");
+					console.log("ID is: " + sources[count].id);
+
+					if(sources[count].label == "")
+					{
+						console.log("Name of the source is: unknown");
+					}
+					else
+					{
+						console.log("Name of the source is: " + sources[count].label);
+					}
+					
+					console.log("Kind of source: " + sources[count].kind);
+
+					if(sources[count].facing == "")
+					{
+						console.log("Source facing: unknown");
+					}
+					else
+					{
+						console.log("Source facing: " + sources[count].facing);
+					}
+				}
+			})
+
+		</script>
+	</body>
+</html>
