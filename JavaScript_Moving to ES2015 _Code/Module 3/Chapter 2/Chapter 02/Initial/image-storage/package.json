@@ -1,7 +1,7 @@
 {
 	"name": "image-storage",
 	"dependencies": {
-		"express" : "4.13.3",
+		"express" : "4.19.2",
 		"connect-multiparty": "2.0.0",
 		"fs": "0.0.2"
 	}
