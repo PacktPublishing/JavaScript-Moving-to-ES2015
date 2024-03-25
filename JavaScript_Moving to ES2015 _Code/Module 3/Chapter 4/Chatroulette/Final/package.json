@@ -1,7 +1,7 @@
 {
 	"name": "Chatroulette",
 	"dependencies": {
-		"express": "4.13.3",
+		"express": "4.19.2",
 		"peer": "0.2.8",
 		"request-ip": "1.1.4",
 		"geoip-lite": "1.1.6"
