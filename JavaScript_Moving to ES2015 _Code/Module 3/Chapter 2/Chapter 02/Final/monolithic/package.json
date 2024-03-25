@@ -2,7 +2,7 @@
 	"name": "monolithic-core",
 	"dependencies": {
 		"seneca": "0.6.5",
-		"express": "4.13.3",
+		"express": "4.19.2",
 		"ejs": "2.3.4",
 		"basic-auth": "1.0.3",
 		"request": "2.64.0"
